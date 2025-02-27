@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tri de Cartes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>   
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <h1>Jeu de Cartes</h1>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Cartes')" id="defaultOpen">Cartes</button>
+        <button class="tablinks" onclick="openTab(event, 'Algorithme')">Algorithme</button>
+    </div>
+
+    <div id="Cartes" class="tabcontent">
+        <div id="cartes">
+            {% for carte in cartes %}
+                <img src="data:image/svg+xml;base64,{{ carte }}" alt="Carte">
+            {% endfor %}
+        </div>
+        <button id="trier-btn">Trier les Cartes</button>
+        <button id="reinitialiser-btn">Réinitialiser</button>
+    </div>
+
+    <div id="Algorithme" class="tabcontent">
+        <h2>Algorithme de Tri à Bulles</h2>
+        <p>Le tri à bulles, c’est une méthode facile pour ranger des choses dans le bon ordre.</p> 
+        <p>On regarde chaque paire de choses dans la liste, une après l’autre.</p> 
+        <p>Si la première est plus grande que la deuxième, on les échange.</p>
+        <p>On répète cette opération plusieurs fois jusqu'à ce que tout soit bien rangé, comme dans l'ordre des tailles ou des nombres.</p>
+        <pre>
+            <code>
+                def tri_bulle(jeu):
+                # On obtient la taille de la liste 'jeu', c'est-à-dire le nombre de cartes à trier
+                n = len(jeu)
+
+                # On initialise un compteur pour le nombre de fois où on parcourt la liste
+                i = 0
+                
+                # Tant qu'on n'a pas parcouru toutes les cartes
+                while i < n:
+                    
+                    # On initialise le compteur pour les paires de cartes à comparer
+                    j = 0
+                    
+                    # On compare chaque carte avec la suivante, sauf les cartes déjà triées
+                    while j < n - i - 1:
+                        
+                        # Si la carte actuelle est plus grande que la suivante
+                        if valeur_carte(jeu[j]) > valeur_carte(jeu[j + 1]):
+                            
+                            # On échange les cartes pour les mettre dans le bon ordre
+                            jeu[j], jeu[j + 1] = jeu[j + 1], jeu[j]
+                            
+                        # On passe à la carte suivante pour la comparaison
+                        j += 1
+                    
+                    # On a terminé un parcours, on recommence avec une carte de moins à comparer
+                    i += 1
+                                     </code>
+         </pre>
+    </div>
+
+    <script>
+        document.getElementById('trier-btn').addEventListener('click', function() {
+            fetch('/trier', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const cartesDiv = document.getElementById('cartes');
+                cartesDiv.innerHTML = '';
+                data.cartes.forEach(carte => {
+                    const img = document.createElement('img');
+                    img.src = `data:image/svg+xml;base64,${carte}`;
+                    cartesDiv.appendChild(img);
+                });
+            });
+        });
+
+        document.getElementById('reinitialiser-btn').addEventListener('click', function() {
+            fetch('/reinitialiser', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                const cartesDiv = document.getElementById('cartes');
+                cartesDiv.innerHTML = '';
+                data.cartes.forEach(carte => {
+                    const img = document.createElement('img');
+                    img.src = `data:image/svg+xml;base64,${carte}`;
+                    cartesDiv.appendChild(img);
+                });
+            });
+        });
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Ouvrir l'onglet par défaut
+        document.getElementById("defaultOpen").click();
+    </script>
+</body>
+</html>
