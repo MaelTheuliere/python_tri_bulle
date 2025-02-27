@@ -63,13 +63,18 @@ def tri_bulle(jeu):
 def generer_svg_carte(carte):
     valeur, couleur = carte
     dwg = svgwrite.Drawing(size=(100, 150))
-    dwg.add(dwg.rect((0, 0), (100, 150), fill='white', stroke='black', rx=10, ry=10))
 
-    # Ajouter la valeur de la carte
-    dwg.add(dwg.text(valeur, insert=(10, 30), font_size=20, fill='black', text_anchor="start"))
-    dwg.add(dwg.text(valeur, insert=(90, 130), font_size=20, fill='black', text_anchor="end"))
+    # Ajouter un fond avec un dégradé
+    dwg.add(dwg.rect((0, 0), (100, 150), fill='url(#grad1)', stroke='black', rx=10, ry=10))
+    grad = dwg.defs.add(dwg.linearGradient(id='grad1', x1="0%", y1="0%", x2="0%", y2="100%"))
+    grad.add_stop_color(0, 'white')
+    grad.add_stop_color(1, 'lightgrey')
 
-    # Ajouter le symbole de la couleur
+    # Ajouter la valeur de la carte avec une police personnalisée
+    dwg.add(dwg.text(valeur, insert=(10, 30), font_size=20, fill='black', font_family="Arial", text_anchor="start"))
+    dwg.add(dwg.text(valeur, insert=(90, 130), font_size=20, fill='black', font_family="Arial", text_anchor="end"))
+
+    # Ajouter le symbole de la couleur avec une police personnalisée
     if couleur == 'Coeur':
         symbole = '♥'
         couleur_symbole = 'red'
@@ -83,11 +88,10 @@ def generer_svg_carte(carte):
         symbole = '♠'
         couleur_symbole = 'black'
 
-    dwg.add(dwg.text(symbole, insert=(10, 50), font_size=30, fill=couleur_symbole, text_anchor="start"))
-    dwg.add(dwg.text(symbole, insert=(90, 110), font_size=30, fill=couleur_symbole, text_anchor="end"))
-
+    dwg.add(dwg.text(symbole, insert=(10, 50), font_size=30, fill=couleur_symbole, font_family="Arial", text_anchor="start"))
+    dwg.add(dwg.text(symbole, insert=(90, 110), font_size=30, fill=couleur_symbole, font_family="Arial", text_anchor="end"))
+    
     return dwg.tostring()
-
 # Convertir SVG en base64
 def svg_to_base64(svg):
     return base64.b64encode(svg.encode('utf-8')).decode('utf-8')
