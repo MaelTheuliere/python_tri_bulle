@@ -10,6 +10,7 @@ body {
     margin-bottom: 20px;
 }
 
+
 .tab button {
     background-color: inherit;
     float: left;
@@ -17,12 +18,13 @@ body {
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
-    transition: 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
     font-size: 17px;
 }
 
 .tab button:hover {
     background-color: #ddd;
+    transform: scale(1.1);
 }
 
 .tab button.active {
@@ -30,10 +32,16 @@ body {
 }
 
 .tabcontent {
+    opacity: 0;
+    transition: opacity 0.5s ease;
     display: none;
     padding: 6px 12px;
     border: 1px solid #ccc;
     border-top: none;
+}
+
+.tabcontent.active {
+    opacity: 1;
 }
 
 #cartes {
@@ -43,10 +51,18 @@ body {
 }
 
 #cartes img {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
     margin: 10px;
     border: 1px solid #000;
     border-radius: 10px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+#cartes img.loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 button {

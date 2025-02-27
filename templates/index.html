@@ -12,7 +12,7 @@
     <script>hljs.highlightAll();</script>
 </head>
 <body>
-    <h1>Jeu de Cartes</h1>
+    <h1>Trier un jeu de Cartes</h1>
     <div class="tab">
         <button class="tablinks" onclick="openTab(event, 'Cartes')" id="defaultOpen">Cartes</button>
         <button class="tablinks" onclick="openTab(event, 'Algorithme')">Algorithme</button>
@@ -79,11 +79,12 @@
                 data.cartes.forEach(carte => {
                     const img = document.createElement('img');
                     img.src = `data:image/svg+xml;base64,${carte}`;
+                    img.onload = () => img.classList.add('loaded');
                     cartesDiv.appendChild(img);
                 });
             });
         });
-
+        
         document.getElementById('reinitialiser-btn').addEventListener('click', function() {
             fetch('/reinitialiser', {
                 method: 'POST'
@@ -95,6 +96,7 @@
                 data.cartes.forEach(carte => {
                     const img = document.createElement('img');
                     img.src = `data:image/svg+xml;base64,${carte}`;
+                    img.onload = () => img.classList.add('loaded');
                     cartesDiv.appendChild(img);
                 });
             });
@@ -105,15 +107,16 @@
             tabcontent = document.getElementsByClassName("tabcontent");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
             }
             tablinks = document.getElementsByClassName("tablinks");
             for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
             document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
             evt.currentTarget.className += " active";
         }
-
         // Ouvrir l'onglet par défaut
         document.getElementById("defaultOpen").click();
     </script>
